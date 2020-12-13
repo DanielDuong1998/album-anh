@@ -1,5 +1,7 @@
 package com.example.albumanh;
 
+import java.util.Date;
+
 public class MediaItem {
   private String path;
   private String name;
@@ -46,6 +48,10 @@ public class MediaItem {
 
   public int getType() {
     return type;
+  }
+
+  public String getDateAddedString(){
+    return (new Date(Long.parseLong(dateAdded + "000"))).toString();
   }
 
   //set

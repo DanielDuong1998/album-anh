@@ -33,6 +33,7 @@ public class MediaModel {
     }
   }
 
+  // start children function loadAllMediaItem
   private static boolean compareTime(MediaItem item1, MediaItem item2, int type){
     // type = 1 => compare dd mm yyyy, type = 2 => compare mm yyyy, type = 3 => compare yyyy
     String dateStr1 = item1.getDateAdded() + "000";
@@ -99,5 +100,9 @@ public class MediaModel {
       }
     }
   }
+  // end children function loadAllMediaItem
+
+
+
 
 }
