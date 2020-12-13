@@ -15,7 +15,7 @@ public class AlbumsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        RootView = inflater.inflate(R.layout.fragment_albums,container,false);
+        RootView = inflater.inflate(R.layout.fragment_albums,container,false); //Layout ViewPager thứ 2 đổ vào đây
         return RootView;
     }
 }
