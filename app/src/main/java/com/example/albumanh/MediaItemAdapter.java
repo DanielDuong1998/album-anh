@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -65,7 +66,7 @@ public class MediaItemAdapter extends BaseAdapter {
       viewHolder = (ViewHolder) convertView.getTag();
     }
 
-    MediaItem item = mediaItemList.get(position);
+    final MediaItem item = mediaItemList.get(position);
     Glide.with(context)
             .load(item.getPath())
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
@@ -76,6 +77,26 @@ public class MediaItemAdapter extends BaseAdapter {
     } else {
       viewHolder.shapeCheck.setVisibility(View.INVISIBLE);
     }
+
+    //thêm chức năng click vào một ảnh để mở màn hình xem full ảnh
+    convertView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(context,"Khi bấm vào ảnh thì sẽ chuyển sang màn hình xem full ảnh",Toast.LENGTH_SHORT).show();
+        //chức năng mở màn hình khác viết ở đây
+      }
+    });
+
+    //thêm chức năng long click (nhấn giữ) để thực hiện chọn
+    convertView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        if (item.isCheck()) item.setCheck(false);
+        else item.setCheck(true);
+        notifyDataSetChanged();
+        return true;
+      }
+    });
 
     return convertView;
   }
