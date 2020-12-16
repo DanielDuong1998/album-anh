@@ -1,9 +1,11 @@
 package com.example.albumanh;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,7 @@ public class AlbumsFragment extends Fragment {
         gridViewAlbum = (GridView) RootView.findViewById(R.id.gridviewAlbum);
         albumAdapter = new AlbumAdapter(getActivity(), R.layout.custom_fragment_image_layout, R.layout.custom_fragment_video_layout, MediaModel.albums);
         gridViewAlbum.setAdapter(albumAdapter);
+
 
 
 
