@@ -7,13 +7,13 @@ import java.util.Date;
 public class MediaItem {
   private String path;
   private String name;
-  private String dateAdded;
+  private Date dateAdded;
   private String album;
   private long size;
   private boolean isCheck;
   private int type; // type = 1 => image, type = 2 => video
 
-  public MediaItem(String path, String name, String dateAdded, String album, long size, int type) {
+  public MediaItem(String path, String name, Date dateAdded, String album, long size, int type) {
     this.path = path;
     this.name = name;
     this.dateAdded = dateAdded;
@@ -32,7 +32,7 @@ public class MediaItem {
     return name;
   }
 
-  public String getDateAdded() {
+  public Date getDateAdded() {
     return dateAdded;
   }
 
@@ -53,27 +53,31 @@ public class MediaItem {
   }
 
   public String getDateAddedString(){
-    return (new Date(Long.parseLong(dateAdded + "000"))).toString();
+//    return (new Date(Long.parseLong(dateAdded + "000"))).toString();
+    return dateAdded.toString();
   }
 
   public String getDateFormatMMMMddyyyy(){ //September 25, 2020
     SimpleDateFormat simpleDate =  new SimpleDateFormat("MMMM dd, yyyy");;
     Date CurrentDate = new Date();
-    Date ThisDate = new Date(Long.parseLong(dateAdded + "000"));
+    Date ThisDate = dateAdded;
 
     if ((CurrentDate.getYear()==ThisDate.getYear())&&(CurrentDate.getMonth()==ThisDate.getMonth())&&(CurrentDate.getDate()==ThisDate.getDate())) return "Today";
     if ((CurrentDate.getYear()==ThisDate.getYear())&&(CurrentDate.getMonth()==ThisDate.getMonth())&&(CurrentDate.getDate()==ThisDate.getDate()+1)) return "Yesterday";
-    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+//    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+    return simpleDate.format(dateAdded);
   }
 
   public String getDateFormatMMMMyyyy(){ //September 2020
     SimpleDateFormat simpleDate =  new SimpleDateFormat("MMMM yyyy");;
-    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+//    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+    return simpleDate.format(dateAdded);
   }
 
   public String getDateFormatyyyy(){ //September 2020
     SimpleDateFormat simpleDate =  new SimpleDateFormat("yyyy");;
-    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+//    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+    return simpleDate.format(dateAdded);
   }
 
   public void setPath(String path) {
@@ -84,7 +88,7 @@ public class MediaItem {
     this.name = name;
   }
 
-  public void setDateAdded(String dateAdded) {
+  public void setDateAdded(Date dateAdded) {
     this.dateAdded = dateAdded;
   }
 

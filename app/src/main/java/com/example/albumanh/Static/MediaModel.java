@@ -9,7 +9,12 @@ import com.example.albumanh.Album;
 import com.example.albumanh.MediaItem;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class MediaModel {
@@ -19,12 +24,6 @@ public class MediaModel {
   public static void init(Activity activity){
     loadAllMediaItem(activity);
 
-    for(int i = 0; i < albums.size(); i++) {
-      System.out.println("album thu: " + (i + 1));
-      System.out.println("ten: " + albums.get(i).getName());
-      System.out.println("so luong: " + albums.get(i).getMediaItemSize());
-      System.out.println("ngay thang: " + (new Date(albums.get(i).getDateCreate())).toString());
-    }
   }
 
   private static void loadAllMediaItem(Activity activity){
@@ -37,28 +36,39 @@ public class MediaModel {
     updateSimpleItemToArray(images);
     updateSimpleItemToArray(videos);
 
-    for(ArrayList<MediaItem> mdis : allMediaItems){
-      System.out.println("title: " + new Date(Long.parseLong(mdis.get(0).getDateAdded() + "000")).toString());
-      System.out.println("size: " + mdis.size());
-      System.out.println("=======================>");
+
+    sortAllMediaItem(1);
+  }
+
+  private static void sortAllMediaItem(int type){
+    if(type == 1){
+      for(int i = 0; i < allMediaItems.size() - 1; i++) {
+        for(int j = i + 1; j < allMediaItems.size(); j++){
+          if(allMediaItems.get(i).get(0).getDateAdded().getTime() > allMediaItems.get(j).get(0).getDateAdded().getTime()){
+            Collections.swap(allMediaItems, i, j);
+          }
+        }
+      }
     }
   }
 
   // start children function loadAllMediaItem
   private static boolean compareTime(MediaItem item1, MediaItem item2, int type){
     // type = 1 => compare dd mm yyyy, type = 2 => compare mm yyyy, type = 3 => compare yyyy
-    String dateStr1 = item1.getDateAdded() + "000";
-    String dateStr2 = item2.getDateAdded() + "000";
-    Date date1 = new Date(Long.parseLong(dateStr1));
-    Date date2 = new Date(Long.parseLong(dateStr2));
+    Date date1 = item1.getDateAdded();
+    Date date2 = item2.getDateAdded();
+    Calendar c1 = Calendar.getInstance();
+    c1.setTime(date1);
+    Calendar c2 = Calendar.getInstance();
+    c2.setTime(date2);
 
     if(type == 1){
-      return (date1.getYear() == date2.getYear() && date1.getMonth() == date2.getMonth() && date1.getDay() == date2.getDay());
+      return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c1.get(Calendar.DATE) == c2.get(Calendar.DATE));
     }
     else if(type == 2){
-      return date1.getYear() == date2.getYear() && date1.getMonth() == date2.getMonth();
+      return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH);
     }
-    else return date1.getYear() == date2.getYear();
+    else return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
   }
 
   private static ArrayList<MediaItem> loadAllSimpleMediaItem(Activity activity, int role){
@@ -67,7 +77,7 @@ public class MediaModel {
     Uri uri = role == 1 ? MediaStore.Images.Media.EXTERNAL_CONTENT_URI : MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
     String[] projection = {MediaStore.MediaColumns.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-            MediaStore.Images.Media.DATE_ADDED,
+            MediaStore.Images.Media.DATE_MODIFIED,
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.SIZE};
 
@@ -76,6 +86,7 @@ public class MediaModel {
     {
       String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
       File filepath = new File(path);
+      Date dateAdded = new Date(filepath.lastModified());
       long filesize = filepath.length();
 
 
@@ -86,7 +97,7 @@ public class MediaModel {
 
       mediaItems.add(new MediaItem(cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA)),
               cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)),
-              cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)),
+              dateAdded,
               cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)),
               filesize, role));
     }
@@ -99,17 +110,22 @@ public class MediaModel {
         ArrayList<MediaItem> list = new ArrayList<>();
         list.add(item);
         allMediaItems.add(list);
+        System.out.println("khong vao");
       }
       else {
         boolean flag = false;
         for(int i = 0; i < allMediaItems.size(); i++) {
+          System.out.println("item: " + item.getDateFormatMMMMddyyyy());
+          System.out.println("item1: " + allMediaItems.get(i).get(0).getDateFormatMMMMddyyyy());
           if(compareTime(item, allMediaItems.get(i).get(0), 1)){
+            System.out.println("vao");
             allMediaItems.get(i).add(item);
             flag = true;
             break;
           }
         }
         if(!flag){
+          System.out.println("khong vbao");
           ArrayList<MediaItem> list = new ArrayList<>();
           list.add(item);
           allMediaItems.add(list);
@@ -135,14 +151,6 @@ public class MediaModel {
       albums.add(new Album(name, pathAlbum, path, imgCount, createDate, false,  type));
     }
 
-//    File file = new File(path.substring(0, path.lastIndexOf("/")));
-//    System.out.println("path folder: " + path.substring(0, path.lastIndexOf("/")));
-//    System.out.println("file name: " + file.getName());
-//    String[] list = file.list();
-//    System.out.println("list..: " + list.length);
-//
-//    String[] ar = path.split("/");
-//    System.out.println("ar...: " + ar[ar.length - 2]);
   }
 
   private static boolean isExistNameInAlbumsList(String name){
