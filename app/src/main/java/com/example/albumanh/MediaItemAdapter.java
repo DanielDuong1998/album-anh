@@ -96,7 +96,7 @@ public class MediaItemAdapter extends BaseAdapter {
     convertView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Toast.makeText(context,"Khi bấm vào ảnh thì sẽ chuyển sang màn hình xem full ảnh" + item.getDateFormatMMMMddyyyy(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"Khi bấm vào ảnh thì sẽ chuyển sang màn hình xem full ảnh",Toast.LENGTH_SHORT).show();
         //chức năng mở màn hình khác viết ở đây
       }
     });
