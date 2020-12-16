@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.example.albumanh.Album;
 import com.example.albumanh.MediaItem;
 
 import java.io.File;
@@ -13,13 +14,23 @@ import java.util.Date;
 
 public class MediaModel {
   public static ArrayList<ArrayList<MediaItem>> allMediaItems;
+  public static ArrayList<Album> albums;
 
   public static void init(Activity activity){
     loadAllMediaItem(activity);
+
+    for(int i = 0; i < albums.size(); i++) {
+      System.out.println("album thu: " + (i + 1));
+      System.out.println("ten: " + albums.get(i).getName());
+      System.out.println("so luong: " + albums.get(i).getMediaItemSize());
+      System.out.println("ngay thang: " + (new Date(albums.get(i).getDateCreate())).toString());
+    }
   }
 
   private static void loadAllMediaItem(Activity activity){
     allMediaItems = new ArrayList<>();
+    albums = new ArrayList<>();
+
     ArrayList<MediaItem> images = loadAllSimpleMediaItem(activity, 1);
     ArrayList<MediaItem> videos = loadAllSimpleMediaItem(activity, 2);
 
@@ -67,6 +78,12 @@ public class MediaModel {
       File filepath = new File(path);
       long filesize = filepath.length();
 
+
+//      File file = new File(path);
+      loadAlbumByPath(path, role);
+
+
+
       mediaItems.add(new MediaItem(cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA)),
               cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)),
               cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)),
@@ -101,6 +118,40 @@ public class MediaModel {
     }
   }
   // end children function loadAllMediaItem
+
+  private static void loadAlbumByPath(String path, int type){
+    String[] listStr = path.split("/");
+    String name = listStr[listStr.length - 2];
+    if(isExistNameInAlbumsList(name)){
+      // album da ton tai
+      return;
+    }
+    else {
+      //album chua ton tai
+      String pathAlbum = path.substring(0, path.lastIndexOf("/"));
+      File file = new File(pathAlbum);
+      int imgCount = file.list().length;
+      long createDate = file.lastModified();
+      albums.add(new Album(name, pathAlbum, path, imgCount, createDate, false,  type));
+    }
+
+//    File file = new File(path.substring(0, path.lastIndexOf("/")));
+//    System.out.println("path folder: " + path.substring(0, path.lastIndexOf("/")));
+//    System.out.println("file name: " + file.getName());
+//    String[] list = file.list();
+//    System.out.println("list..: " + list.length);
+//
+//    String[] ar = path.split("/");
+//    System.out.println("ar...: " + ar[ar.length - 2]);
+  }
+
+  private static boolean isExistNameInAlbumsList(String name){
+    for(Album album : albums){
+      if (album.getName().equals(name))
+        return true;
+    }
+    return false;
+  }
 
 
 
