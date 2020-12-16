@@ -1,5 +1,7 @@
 package com.example.albumanh;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MediaItem {
@@ -54,7 +56,26 @@ public class MediaItem {
     return (new Date(Long.parseLong(dateAdded + "000"))).toString();
   }
 
-  //set
+  public String getDateFormatMMMMddyyyy(){ //September 25, 2020
+    SimpleDateFormat simpleDate =  new SimpleDateFormat("MMMM dd, yyyy");;
+    Date CurrentDate = new Date();
+    Date ThisDate = new Date(Long.parseLong(dateAdded + "000"));
+
+    if ((CurrentDate.getYear()==ThisDate.getYear())&&(CurrentDate.getMonth()==ThisDate.getMonth())&&(CurrentDate.getDate()==ThisDate.getDate())) return "Today";
+    if ((CurrentDate.getYear()==ThisDate.getYear())&&(CurrentDate.getMonth()==ThisDate.getMonth())&&(CurrentDate.getDate()==ThisDate.getDate()+1)) return "Yesterday";
+    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+  }
+
+  public String getDateFormatMMMMyyyy(){ //September 2020
+    SimpleDateFormat simpleDate =  new SimpleDateFormat("MMMM yyyy");;
+    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+  }
+
+  public String getDateFormatyyyy(){ //September 2020
+    SimpleDateFormat simpleDate =  new SimpleDateFormat("yyyy");;
+    return simpleDate.format(Long.parseLong(dateAdded + "000"));
+  }
+
   public void setPath(String path) {
     this.path = path;
   }

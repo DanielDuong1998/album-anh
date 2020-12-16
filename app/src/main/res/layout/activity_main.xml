@@ -4,13 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/listAllMediaItem"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-    </ListView>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="16dp"
+            android:text="T14 Gallery"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <ImageButton
+            android:id="@+id/imgbtnMenuMain"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerCrop"
+            android:src="@drawable/three_dot_menu" />
+
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_Main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabMode="fixed">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photos" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Albums" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_Main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

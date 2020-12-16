@@ -2,10 +2,12 @@ package com.example.albumanh;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -18,11 +20,17 @@ public class MediaItemAdapter extends BaseAdapter {
   private int layoutImage, layoutVideo;
   private ArrayList<MediaItem> mediaItemList;
 
+  private int total;
+
   public MediaItemAdapter(Context context, int layoutImage, int layoutVideo, ArrayList<MediaItem> mediaItemList){
     this.context = context;
     this.layoutImage = layoutImage;
     this.layoutVideo = layoutVideo;
     this.mediaItemList = mediaItemList;
+
+    this.total = 0;
+    for (int i=0; i<mediaItemList.size(); i++) if (mediaItemList.get(i).isCheck()) ++total;
+//    Toast.makeText(context, "total = "+total,Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -65,7 +73,7 @@ public class MediaItemAdapter extends BaseAdapter {
       viewHolder = (ViewHolder) convertView.getTag();
     }
 
-    MediaItem item = mediaItemList.get(position);
+    final MediaItem item = mediaItemList.get(position);
     Glide.with(context)
             .load(item.getPath())
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
@@ -77,6 +85,34 @@ public class MediaItemAdapter extends BaseAdapter {
       viewHolder.shapeCheck.setVisibility(View.INVISIBLE);
     }
 
+//    convertView.setOnTouchListener(new View.OnTouchListener() {
+//      @Override
+//      public boolean onTouch(View view, MotionEvent motionEvent) {
+//        if (motionEvent.getPointerCount() == 2) return false;
+//        else return true;
+//      }
+//    });
+
+    //thêm chức năng click vào một ảnh để mở màn hình xem full ảnh
+    convertView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(context,"Khi bấm vào ảnh thì sẽ chuyển sang màn hình xem full ảnh",Toast.LENGTH_SHORT).show();
+        //chức năng mở màn hình khác viết ở đây
+      }
+    });
+
+    //thêm chức năng long click (nhấn giữ) để thực hiện chọn
+    convertView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        total = total +1;
+        if (item.isCheck()) item.setCheck(false);
+        else item.setCheck(true);
+        notifyDataSetChanged();
+        return true;
+      }
+    });
     return convertView;
   }
 }
