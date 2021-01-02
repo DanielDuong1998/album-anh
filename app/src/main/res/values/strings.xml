@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Nhóm 14 - Ứng dụng bộ sưu tập</string>
+    <string name="facebook_app_id">283510905551628</string>
+    <string name="facebook_login_protocol">fb283510905551628</string>
 </resources>
